@@ -1,7 +1,7 @@
 def review = "Review Results? http://"
 node {
   //stage 'build app'
-  //openshiftBuild(namespace: 'dev', buildConfig: 'welcome', showBuildLogs: 'true')
+  //openshiftBuild(namespace: 'dev-stage', buildConfig: 'welcome', showBuildLogs: 'true')
   stage 'execute image scan'
     sh "oc delete all -l app=image-inspector"
     sh "oc process image-inspector-template -p APPLICATION_NAME=image-inspector -p IMAGE_URL=docker-registry.default.svc:5000/dev/welcome:latest | oc apply -f -"
