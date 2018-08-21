@@ -13,13 +13,13 @@ spec:
       jenkinsfile: |-
         node('') {
           stage 'Build'
-            openshiftBuild(namespace:'dev',buildConfig: 'welcome', showBuildLogs: 'true')
+            openshiftBuild(namespace:'dev-stage',buildConfig: 'welcome', showBuildLogs: 'true')
           stage 'Deploy'
-            openshiftDeploy(namespace:'dev',deploymentConfig: 'welcome')
-            openshiftScale(namespace:'dev',deploymentConfig: 'welcome',replicaCount: '3')
+            openshiftDeploy(namespace:'dev-stage',deploymentConfig: 'welcome')
+            openshiftScale(namespace:'dev-stage',deploymentConfig: 'welcome',replicaCount: '3')
           stage 'Promote in QA'
             input 'Proceeed ?'
-            openshiftTag(namespace: 'dev', sourceStream: 'welcome',  sourceTag: 'latest', destinationStream: 'welcome', destinationTag: 'promoteToQA')
+            openshiftTag(namespace: 'dev-stage', sourceStream: 'welcome',  sourceTag: 'latest', destinationStream: 'welcome', destinationTag: 'promoteToQA')
         }
   output:
   resources:
