@@ -16,13 +16,13 @@ spec:
           stage 'buildInDevelopment'
             openshiftBuild(namespace:'app-dev',buildConfig: 'apps', showBuildLogs: 'true')
           stage 'deployInDevelopment'
-            openshiftDeploy(namespace:'app-dev',deploymentConfig: 'dc-apps')
-            openshiftScale(namespace:'app-dev',deploymentConfig: 'dc-apps',replicaCount: '2')
+            openshiftDeploy(namespace:'app-dev',deploymentConfig: 'apps')
+            openshiftScale(namespace:'app-dev',deploymentConfig: 'apps',replicaCount: '2')
           stage 'deployInQA'
             input 'Proceeed ?'
             openshiftTag(namespace: 'app-dev', sourceStream: 'apps',  sourceTag: 'latest', destinationStream: 'apps', destinationTag: 'promoteToQA')
-            openshiftDeploy(namespace:'app-qa',deploymentConfig: 'dc-apps')
-            openshiftScale(namespace:'app-qa',deploymentConfig: 'dc-apps',replicaCount: '3')
+            openshiftDeploy(namespace:'app-qa',deploymentConfig: 'apps')
+            openshiftScale(namespace:'app-qa',deploymentConfig: 'apps',replicaCount: '3')
         }
   output:
   resources:
