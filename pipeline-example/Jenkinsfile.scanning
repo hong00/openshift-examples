@@ -1,10 +1,10 @@
 def review = "Review Results? http://"
 node {
   //stage 'build app'
-  //openshiftBuild(namespace: 'dev-stage', buildConfig: 'welcome', showBuildLogs: 'true')
+  //openshiftBuild(namespace: 'app-dev', buildConfig: 'apps', showBuildLogs: 'true')
   stage 'execute image scan'
     sh "oc delete all -l app=image-inspector"
-    sh "oc process image-inspector-template -p APPLICATION_NAME=image-inspector -p IMAGE_URL=docker-registry.default.svc:5000/dev/welcome:latest | oc apply -f -"
+    sh "oc process image-inspector-template -p APPLICATION_NAME=image-inspector -p IMAGE_URL=docker-registry-default.router.default.svc.cluster.local:5000/apps-dev/apps:latest | oc apply -f -"
     review += sh(script: "oc get routes -l app=image-inspector --no-headers -o 'jsonpath={.items[*].spec.host}'", returnStdout: true).trim()
     review += "/api/v1/content/results.html"
   stage 'Review'
