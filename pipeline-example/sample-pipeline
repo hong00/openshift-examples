@@ -1,29 +1,29 @@
-apiVersion: v1
-kind: BuildConfig
-metadata:
-  name: sample-pipeline
-  labels:
-    app: jenkins-pipeline-example
-    name: sample-pipeline
-    template: application-template-sample-pipeline
-spec:
-  runPolicy: Serial
-  strategy:
-    type: JenkinsPipeline
-    jenkinsPipelineStrategy:
-      jenkinsfile: |-
-        node('') {
-          stage 'buildInDevelopment'
-            openshiftBuild(namespace:'dev-stage',buildConfig: 'welcome', showBuildLogs: 'true')
-          stage 'deployInDevelopment'
-            openshiftDeploy(namespace:'dev-stage',deploymentConfig: 'welcome')
-            openshiftScale(namespace:'dev-stage',deploymentConfig: 'welcome',replicaCount: '5')
-          stage 'deployInQA'
-            input 'Proceeed ?'
-            openshiftTag(namespace: 'dev-stage', sourceStream: 'welcome',  sourceTag: 'latest', destinationStream: 'welcome', destinationTag: 'promoteToQA')
-            openshiftDeploy(namespace:'qa-stage',deploymentConfig: 'welcome')
-            openshiftScale(namespace:'qa-stage',deploymentConfig: 'welcome',replicaCount: '5')
-        }
-  output:
-  resources:
-  postCommit:
+	apiVersion: v1
+	kind: BuildConfig
+	metadata:
+	  name: apps-pipeline
+	  labels:
+	    app: jenkins-pipeline-example
+	    name: apps-pipeline
+	    template: application-template-sample-pipeline
+	spec:
+	  runPolicy: Serial
+	  strategy:
+	    type: JenkinsPipeline
+	    jenkinsPipelineStrategy:
+	      jenkinsfile: |-
+	        node('') {
+	          stage 'buildInDevelopment'
+	            openshiftBuild(namespace:'app-dev',buildConfig: 'apps', showBuildLogs: 'true')
+	          stage 'deployInDevelopment'
+	            openshiftDeploy(namespace:'app-dev',deploymentConfig: 'dc-apps')
+	            openshiftScale(namespace:'app-dev',deploymentConfig: 'dc-apps',replicaCount: '2')
+	          stage 'deployInQA'
+	            input 'Proceeed ?'
+	            openshiftTag(namespace: 'app-dev', sourceStream: 'apps',  sourceTag: 'latest', destinationStream: 'apps', destinationTag: 'promoteToQA')
+	            openshiftDeploy(namespace:'app-qa',deploymentConfig: 'dc-apps')
+	            openshiftScale(namespace:'app-qa',deploymentConfig: 'dc-apps',replicaCount: '3')
+	        }
+	  output:
+	  resources:
+	  postCommit:
