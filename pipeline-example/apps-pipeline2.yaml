@@ -21,7 +21,7 @@ spec:
             'dev_prj_nameVar=app-dev',
             'dev_pod_countVar=2',
             'qa_prj_nameVar=app-qa',
-            'qa_pod_countVar=3'
+            'qa_pod_countVar=4'
                                 ]){
           stage 'buildInDevelopment'
             openshiftBuild(namespace: env.dev_prj_nameVar , buildConfig: env.app_nameVar , showBuildLogs: 'true')
