@@ -19,8 +19,8 @@ spec:
             'dev_prj_nameVar=app-dev',
             'dev_pod_countVar=2',
             'qa_prj_nameVar=app-qa',
-            'qa_pod_countVar=4'
-          ]){
+            'qa_pod_countVar=3'
+                                ]){
           stage 'buildInDevelopment'
             openshiftBuild(namespace: $dev_prj_nameVar , buildConfig: $app_nameVar , showBuildLogs: 'true')
           stage 'deployInDevelopment'
@@ -36,7 +36,6 @@ spec:
             slackSend (color: '#008000', message: " Application $app_nameVar deployed into $qa_prj_nameVar")
           }                                  
         }
-
   output:
   resources:
   postCommit:
