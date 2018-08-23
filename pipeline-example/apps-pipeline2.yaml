@@ -13,12 +13,14 @@ spec:
     type: JenkinsPipeline
     jenkinsPipelineStrategy:
       jenkinsfile: |-
-          def app_nameVar='apps'
-          def dev_prj_nameVar='app-dev'
-          def dev_pod_countVar='2'
-          def qa_prj_nameVar='app-qa'
-          def qa_pod_countVar='3'        
         node('') {
+          parameters {
+            text(name: 'app_nameVar', defaultValue: 'apps', description: 'Application Name')
+            text(name: 'dev_prj_nameVar', defaultValue: 'app-dev', description: 'Application Dev Project Name')
+            text(name: 'dev_pod_countVar', defaultValue: '2', description: 'Application Dev Pod Count')
+            text(name: 'qa_prj_nameVar', defaultValue: 'app-qa', description: 'Application QA Project Name')
+            text(name: 'qa_pod_countVar', defaultValue: '3', description: 'Application QA Pod Count')
+          }
           stage 'buildInDevelopment'
             openshiftBuild(namespace: ${dev_prj_nameVar} , buildConfig: ${app_nameVar} , showBuildLogs: 'true')
           stage 'deployInDevelopment'
