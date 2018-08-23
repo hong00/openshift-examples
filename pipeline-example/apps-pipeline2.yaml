@@ -13,11 +13,11 @@ spec:
     type: JenkinsPipeline
     jenkinsPipelineStrategy:
       jenkinsfile: |-
-        def app_nameVar = "apps"
-        def dev_prj_nameVar = "app-dev"
-        def dev_pod_countVar = "2"
-        def qa_prj_nameVar = "app-qa"
-        def qa_pod_countVar = "3"
+        app_nameVar = "apps"
+        dev_prj_nameVar = "app-dev"
+        dev_pod_countVar = "2"
+        qa_prj_nameVar = "app-qa"
+        qa_pod_countVar = "3"
         node('') {
           stage 'buildInDevelopment'
             openshiftBuild(namespace: $dev_prj_nameVar , buildConfig: $app_nameVar , showBuildLogs: 'true')
