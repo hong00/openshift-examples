@@ -44,8 +44,9 @@ spec:
             openshiftTag(namespace: ${DEV-PRJ-NAME}, sourceStream: ${APPS-NAME},  sourceTag: 'latest' , destinationStream: ${APPS-NAME} , destinationTag: 'promoteToQA')
             openshiftDeploy(namespace: ${QA-PRJ-NAME} , deploymentConfig: ${APPS-NAME})
             openshiftScale(namespace: ${QA-PRJ-NAME} , deploymentConfig: ${APPS-NAME} , replicaCount: ${QA-POD-COUNT})
+          stage 'finishinDeployment'
+            slackSend (color: '#008000', message: " Application " ${APPS-NAME} " deployed into " ${QA-PRJ-NAME})              
         }
   output:
   resources:
   postCommit:
-    slackSend (color: '#008000', message: " Application " ${APPS-NAME} " deployed into " ${QA-PRJ-NAME})
