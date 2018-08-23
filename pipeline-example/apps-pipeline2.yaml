@@ -22,18 +22,18 @@ spec:
             qa_pod_countVar='3'
           }  
           stage 'buildInDevelopment'
-            openshiftBuild(namespace: ${dev_prj_nameVar} , buildConfig: ${app_nameVar} , showBuildLogs: 'true')
+            openshiftBuild(namespace: ${env.dev_prj_nameVar} , buildConfig: ${env.app_nameVar} , showBuildLogs: 'true')
           stage 'deployInDevelopment'
-            openshiftDeploy(namespace: ${dev_prj_nameVar} , deploymentConfig: ${app_nameVar})
-            openshiftScale(namespace: ${dev_prj_nameVar} , deploymentConfig: ${app_nameVar} , replicaCount: ${dev_pod_countVar})
+            openshiftDeploy(namespace: ${env.dev_prj_nameVar} , deploymentConfig: ${env.app_nameVar})
+            openshiftScale(namespace: ${env.dev_prj_nameVar} , deploymentConfig: ${env.app_nameVar} , replicaCount: ${env.dev_pod_countVar})
           stage 'deployInQA'
-            slackSend (color: '#FFFF00', message: " Application ${app_nameVar} deployment into ${qa_prj_nameVar} is needed")
+            slackSend (color: '#FFFF00', message: " Application ${env.app_nameVar} deployment into ${env.qa_prj_nameVar} is needed")
             input 'Proceeed ?'
-            openshiftTag(namespace: ${dev_prj_nameVar}, sourceStream: ${app_nameVar},  sourceTag: 'latest' , destinationStream: ${app_nameVar} , destinationTag: 'promoteToQA')
-            openshiftDeploy(namespace: ${qa_prj_nameVar} , deploymentConfig: ${app_nameVar})
-            openshiftScale(namespace: ${qa_prj_nameVar} , deploymentConfig: ${app_nameVar} , replicaCount: ${qa_pod_countVar})
+            openshiftTag(namespace: ${env.dev_prj_nameVar}, sourceStream: ${env.app_nameVar},  sourceTag: 'latest' , destinationStream: ${env.app_nameVar} , destinationTag: 'promoteToQA')
+            openshiftDeploy(namespace: ${env.qa_prj_nameVar} , deploymentConfig: ${env.app_nameVar})
+            openshiftScale(namespace: ${env.qa_prj_nameVar} , deploymentConfig: ${env.app_nameVar} , replicaCount: ${env.qa_pod_countVar})
           stage 'finishinDeployment'
-            slackSend (color: '#008000', message: " Application ${app_nameVar} deployed into ${qa_prj_nameVar}")              
+            slackSend (color: '#008000', message: " Application ${env.app_nameVar} deployed into ${env.qa_prj_nameVar}")              
         }
   output:
   resources:
