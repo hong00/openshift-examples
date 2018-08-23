@@ -13,6 +13,8 @@ spec:
     type: JenkinsPipeline
     jenkinsPipelineStrategy:
       jenkinsfile: |-
+        import jenkins.model.*
+        jenkins = Jenkins.instance
         node('') {
           withEnv([
             'app_nameVar=apps',
