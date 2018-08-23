@@ -7,9 +7,9 @@ node {
   openshiftTag(namespace: 'app-dev', sourceStream: 'apps',  sourceTag: 'latest', destinationStream: 'apps', destinationTag: 'promoteToQA', destinationNamespace: 'app-dev')
 
   stage 'deploy in QA'
-  openshiftDeploy(namespace: 'app-dev', deploymentConfig: 'apps')
+  openshiftDeploy(namespace: 'app-qa', deploymentConfig: 'apps')
 
   stage 'scale dev and QA'
   openshiftScale(namespace: 'app-dev', deploymentConfig: 'apps',replicaCount: '2')
-  openshiftScale(namespace: 'app-dev', deploymentConfig: 'apps',replicaCount: '3')
+  openshiftScale(namespace: 'app-qa', deploymentConfig: 'apps',replicaCount: '3')
 }
