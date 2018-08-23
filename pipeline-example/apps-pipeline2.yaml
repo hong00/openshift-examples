@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: ${APPS-PIPELINE-NAME}
+  labels:
+    app: ${APPS-NAME}
+    name: ${APPS-PIPELINE-NAME}
+    template: application-template-sample-pipeline
+parameters:
+- description: application pipeline name
+  name: APPS-PIPELINE-NAME
+  value: apps-pipeline
+- description: application name
+  name: APPS-NAME
+  value: apps
+- description: application DEV project name
+  name: DEV-PRJ-NAME
+  value: app-dev
+- description: application DEV pod count
+  name: DEV-POD-COUNT
+  value: 2
+- description: application QA project name
+  name: QA-PRJ-NAME
+  value: app-qa
+- description: application QA pod count
+  name: QA-POD-COUNT
+  value: 3
+
+spec:
+  runPolicy: Serial
+  strategy:
+    type: JenkinsPipeline
+    jenkinsPipelineStrategy:
+      jenkinsfile: |-
+        node('') {
+          stage 'buildInDevelopment'
+            openshiftBuild(namespace: ${DEV-PRJ-NAME} , buildConfig: ${APPS-NAME} , showBuildLogs: 'true')
+          stage 'deployInDevelopment'
+            openshiftDeploy(namespace: ${DEV-PRJ-NAME} , deploymentConfig: ${APPS-NAME})
+            openshiftScale(namespace: ${DEV-PRJ-NAME} , deploymentConfig: ${APPS-NAME} , replicaCount: ${DEV-POD-COUNT})
+          stage 'deployInQA'
+            slackSend (color: '#FFFF00', message: " Application " ${APPS-NAME} " deployment into " ${QA-PRJ-NAME}" is needed")
+            input 'Proceeed ?'
+            openshiftTag(namespace: ${DEV-PRJ-NAME}, sourceStream: ${APPS-NAME},  sourceTag: 'latest' , destinationStream: ${APPS-NAME} , destinationTag: 'promoteToQA')
+            openshiftDeploy(namespace: ${QA-PRJ-NAME} , deploymentConfig: ${APPS-NAME})
+            openshiftScale(namespace: ${QA-PRJ-NAME} , deploymentConfig: ${APPS-NAME} , replicaCount: ${QA-POD-COUNT})
+        }
+  output:
+  resources:
+  postCommit:
+    slackSend (color: '#008000', message: " Application " ${APPS-NAME} " deployed into " ${QA-PRJ-NAME})
