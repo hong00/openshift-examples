@@ -24,6 +24,8 @@ spec:
             openshiftTag(namespace: 'app-dev', sourceStream: 'apps',  sourceTag: 'latest', destinationStream: 'apps', destinationTag: 'promoteToQA')
             openshiftDeploy(namespace:'app-qa',deploymentConfig: 'apps')
             openshiftScale(namespace:'app-qa',deploymentConfig: 'apps',replicaCount: '4')
+          stage 'Completion Notification'
+            slackSend (color: '#008000', message: " Application apps deployed into app-qa")
         }
   output:
   resources:
