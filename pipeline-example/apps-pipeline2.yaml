@@ -13,14 +13,14 @@ spec:
     type: JenkinsPipeline
     jenkinsPipelineStrategy:
       jenkinsfile: |-
-        import jenkins.model.*
-        jenkins = Jenkins.instance
-        app_nameVar = 'apps'
-        dev_prj_nameVar = 'app-dev'
-        dev_pod_countVar = '2'
-        qa_prj_nameVar = 'app-qa'
-        qa_pod_countVar = '4'
         node('') {
+          withEnv([
+            'app_nameVar=apps',
+            'dev_prj_nameVar=app-dev',
+            'dev_pod_countVar=2',
+            'qa_prj_nameVar=app-qa',
+            'qa_pod_countVar=4'
+          ]){
           stage 'buildInDevelopment'
             openshiftBuild(namespace: $dev_prj_nameVar , buildConfig: $app_nameVar , showBuildLogs: 'true')
           stage 'deployInDevelopment'
@@ -33,8 +33,10 @@ spec:
             openshiftDeploy(namespace: $qa_prj_nameVar , deploymentConfig: $app_nameVar)
             openshiftScale(namespace: $qa_prj_nameVar , deploymentConfig: $app_nameVar , replicaCount: $qa_pod_countVar)
           stage 'finishinDeployment'
-            slackSend (color: '#008000', message: " Application $app_nameVar deployed into $qa_prj_nameVar")              
+            slackSend (color: '#008000', message: " Application $app_nameVar deployed into $qa_prj_nameVar")
+          }                                  
         }
+
   output:
   resources:
   postCommit:
