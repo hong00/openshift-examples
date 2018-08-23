@@ -14,26 +14,26 @@ spec:
     jenkinsPipelineStrategy:
       jenkinsfile: |-
         node('') {
-          parameters {
-            text(name: 'app_nameVar', defaultValue: 'apps', description: 'Application Name')
-            text(name: 'dev_prj_nameVar', defaultValue: 'app-dev', description: 'Application Dev Project Name')
-            text(name: 'dev_pod_countVar', defaultValue: '2', description: 'Application Dev Pod Count')
-            text(name: 'qa_prj_nameVar', defaultValue: 'app-qa', description: 'Application QA Project Name')
-            text(name: 'qa_pod_countVar', defaultValue: '3', description: 'Application QA Pod Count')
+          environment {
+            app_nameVar = "apps"
+            dev_prj_nameVar = "app-dev"
+            dev_pod_countVar = "2"
+            qa_prj_nameVar = "app-qa"
+            qa_pod_countVar = "3"
           }
           stage 'buildInDevelopment'
-            openshiftBuild(namespace: ${dev_prj_nameVar} , buildConfig: ${app_nameVar} , showBuildLogs: 'true')
+            openshiftBuild(namespace: $dev_prj_nameVar , buildConfig: $app_nameVar , showBuildLogs: 'true')
           stage 'deployInDevelopment'
-            openshiftDeploy(namespace: ${dev_prj_nameVar} , deploymentConfig: ${app_nameVar})
-            openshiftScale(namespace: ${dev_prj_nameVar} , deploymentConfig: ${app_nameVar} , replicaCount: ${dev_pod_countVar})
+            openshiftDeploy(namespace: $dev_prj_nameVar , deploymentConfig: $app_nameVar)
+            openshiftScale(namespace: $dev_prj_nameVar , deploymentConfig: $app_nameVar , replicaCount: $dev_pod_countVar)
           stage 'deployInQA'
-            slackSend (color: '#FFFF00', message: " Application ${app_nameVar} deployment into ${qa_prj_nameVar} is needed")
+            slackSend (color: '#FFFF00', message: " Application $app_nameVar deployment into $qa_prj_nameVar is needed")
             input 'Proceeed ?'
-            openshiftTag(namespace: ${dev_prj_nameVar}, sourceStream: ${app_nameVar},  sourceTag: 'latest' , destinationStream: ${app_nameVar} , destinationTag: 'promoteToQA')
-            openshiftDeploy(namespace: ${qa_prj_nameVar} , deploymentConfig: ${app_nameVar})
-            openshiftScale(namespace: ${qa_prj_nameVar} , deploymentConfig: ${app_nameVar} , replicaCount: ${qa_pod_countVar})
+            openshiftTag(namespace: $dev_prj_nameVar, sourceStream: $app_nameVar,  sourceTag: 'latest' , destinationStream: $app_nameVar , destinationTag: 'promoteToQA')
+            openshiftDeploy(namespace: $qa_prj_nameVar , deploymentConfig: $app_nameVar)
+            openshiftScale(namespace: $qa_prj_nameVar , deploymentConfig: $app_nameVar , replicaCount: $qa_pod_countVar)
           stage 'finishinDeployment'
-            slackSend (color: '#008000', message: " Application ${app_nameVar} deployed into ${qa_prj_nameVar}")              
+            slackSend (color: '#008000', message: " Application $app_nameVar deployed into $qa_prj_nameVar")              
         }
   output:
   resources:
