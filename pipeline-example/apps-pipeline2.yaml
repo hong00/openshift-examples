@@ -6,22 +6,6 @@ metadata:
     app: jenkins-pipeline-example
     name: apps-pipeline
     template: application-template-sample-pipeline
-parameters:
-- description: application name
-  name: APPS-NAME
-  value: apps
-- description: application DEV project name
-  name: DEV-PRJ-NAME
-  value: app-dev
-- description: application DEV pod count
-  name: DEV-POD-COUNT
-  value: 2
-- description: application QA project name
-  name: QA-PRJ-NAME
-  value: app-qa
-- description: application QA pod count
-  name: QA-POD-COUNT
-  value: 3
 
 spec:
   runPolicy: Serial
@@ -29,6 +13,15 @@ spec:
     type: JenkinsPipeline
     jenkinsPipelineStrategy:
       jenkinsfile: |-
+ 
+      environment {
+        APPS-NAME='apps'
+        DEV-PRJ-NAME='app-dev'
+        DEV-POD-COUNT='2'
+        QA-PRJ-NAME='app-qa'
+        QA-POD-COUNT='3'
+      }  
+
         node('') {
           stage 'buildInDevelopment'
             openshiftBuild(namespace: ${DEV-PRJ-NAME} , buildConfig: ${APPS-NAME} , showBuildLogs: 'true')
