@@ -23,7 +23,7 @@ spec:
             input 'Proceeed ?'
             openshiftTag(namespace: 'app-dev', sourceStream: 'apps',  sourceTag: 'latest', destinationStream: 'apps', destinationTag: 'promoteToQA')
             openshiftDeploy(namespace:'app-qa',deploymentConfig: 'apps')
-            openshiftScale(namespace:'app-qa',deploymentConfig: 'apps',replicaCount: '3')
+            openshiftScale(namespace:'app-qa',deploymentConfig: 'apps',replicaCount: '4')
         }
   output:
   resources:
