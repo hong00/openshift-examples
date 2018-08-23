@@ -13,16 +13,14 @@ spec:
     type: JenkinsPipeline
     jenkinsPipelineStrategy:
       jenkinsfile: |-
- 
-      environment {
-        APPS-NAME='apps'
-        DEV-PRJ-NAME='app-dev'
-        DEV-POD-COUNT='2'
-        QA-PRJ-NAME='app-qa'
-        QA-POD-COUNT='3'
-      }  
-
         node('') {
+          environment {
+            APPS-NAME='apps'
+            DEV-PRJ-NAME='app-dev'
+            DEV-POD-COUNT='2'
+            QA-PRJ-NAME='app-qa'
+            QA-POD-COUNT='3'
+          }  
           stage 'buildInDevelopment'
             openshiftBuild(namespace: ${DEV-PRJ-NAME} , buildConfig: ${APPS-NAME} , showBuildLogs: 'true')
           stage 'deployInDevelopment'
