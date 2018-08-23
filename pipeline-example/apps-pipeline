@@ -19,6 +19,7 @@ spec:
             openshiftDeploy(namespace:'app-dev',deploymentConfig: 'apps')
             openshiftScale(namespace:'app-dev',deploymentConfig: 'apps',replicaCount: '2')
           stage 'deployInQA'
+            slackSend (color: '#FFFF00', message: "Deploy in QA approval needed for: apps")
             input 'Proceeed ?'
             openshiftTag(namespace: 'app-dev', sourceStream: 'apps',  sourceTag: 'latest', destinationStream: 'apps', destinationTag: 'promoteToQA')
             openshiftDeploy(namespace:'app-qa',deploymentConfig: 'apps')
