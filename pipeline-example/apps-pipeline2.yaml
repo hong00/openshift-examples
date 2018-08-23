@@ -1,15 +1,12 @@
 apiVersion: v1
 kind: BuildConfig
 metadata:
-  name: ${APPS-PIPELINE-NAME}
+  name: apps-pipeline
   labels:
-    app: ${APPS-NAME}
-    name: ${APPS-PIPELINE-NAME}
+    app: jenkins-pipeline-example
+    name: apps-pipeline
     template: application-template-sample-pipeline
 parameters:
-- description: application pipeline name
-  name: APPS-PIPELINE-NAME
-  value: apps-pipeline
 - description: application name
   name: APPS-NAME
   value: apps
